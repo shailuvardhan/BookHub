@@ -71,6 +71,9 @@ class Header extends Component {
                   >
                     <FiSun className={textColor} size={25} />
                   </button>
+                  <Link to="/cart" className="nav-links">
+                    <li className={`nav-text ${textColor}`}>Cart</li>
+                  </Link>
                   <Link to="/login" className="nav-links">
                     <li>
                       <button

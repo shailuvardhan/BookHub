@@ -9,26 +9,27 @@ import Footer from '../Footer'
 import BookHubThemeContext from '../../context/BookHubThemeContext'
 import './index.css'
 
+
 const bookshelvesList = [
   {
     id: '22526c8e-680e-4419-a041-b05cc239ece4',
-    labelValue: 'ALL',
-    label: 'All',
+    priceValue: '500',
+    price: '500',
   },
   {
     id: '37e09397-fab2-46f4-9b9a-66b2324b2e22',
-    labelValue: 'READ',
-    label: 'Read',
+    priceValue: '678',
+    price: '678',
   },
   {
     id: '2ab42512-3d05-4fba-8191-5122175b154e',
-    labelValue: 'CURRENTLY_READING',
-    label: 'Currently Reading',
+    priceValue: '879',
+    price: '879',
   },
   {
     id: '361d5fd4-9ea1-4e0c-bd47-da2682a5b7c8',
-    labelValue: 'WANT_TO_READ',
-    label: 'Want to Read',
+    priceValue: '799',
+    price: '799',
   },
 ]
 
@@ -44,7 +45,7 @@ class Bookshelves extends Component {
     booksList: [],
     searchInput: '',
     searchText: '',
-    bookshelfName: bookshelvesList[0].labelValue,
+    bookshelfName: bookshelvesList[0].priceValue,
     apiStatus: apiStatusConstants.initial,
   }
 
@@ -52,11 +53,11 @@ class Bookshelves extends Component {
     this.getBooks()
   }
 
-  formattedData = book => ({
+  formattedData = (book,number) => ({
     id: book.id,
     title: book.title,
     authorName: book.author_name,
-    readStatus: book.read_status,
+    readStatus: number,
     coverPic: book.cover_pic,
     rating: book.rating,
   })
@@ -76,8 +77,9 @@ class Bookshelves extends Component {
     if (response.ok) {
       const fetchedData = await response.json()
 
+      const number = Math.ceil(Math.random()*100)
       const updatedList = fetchedData.books.map(eachBook =>
-        this.formattedData(eachBook),
+        this.formattedData(eachBook,number),
       )
 
       this.setState({
@@ -105,51 +107,6 @@ class Bookshelves extends Component {
   onClickTryAgain = () => {
     this.getBooks()
   }
-
-  renderBookShelvesListSection = () => (
-    <BookHubThemeContext.Consumer>
-      {value => {
-        const {isDarkTheme} = value
-        const bgColor = isDarkTheme
-          ? 'shelf-list-dark-theme'
-          : 'list-light-theme'
-        const textColor = !isDarkTheme ? 'light-theme-text' : 'dark-theme-text'
-        const buttonText = isDarkTheme
-          ? 'shelf-button-dark-text'
-          : 'shelf-button-light-text'
-        return (
-          <div className={`books-shelves-list-container ${bgColor}`}>
-            <h1 className={`bookshelves-heading ${textColor}`}>Bookshelves</h1>
-            <ul className="book-shelves-list">
-              {bookshelvesList.map(eachType => {
-                const {label, labelValue} = eachType
-                const onClickShelf = () => {
-                  this.onClickShelfItem(labelValue)
-                }
-                const {bookshelfName} = this.state
-                const isActive = labelValue === bookshelfName
-                console.log(isActive)
-                const textStyle = isActive
-                  ? 'active-shelf-button'
-                  : 'shelf-button'
-                return (
-                  <li key={eachType.id} className="book-shelf">
-                    <button
-                      type="button"
-                      onClick={onClickShelf}
-                      className={`${buttonText} ${textStyle}`}
-                    >
-                      {label}
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        )
-      }}
-    </BookHubThemeContext.Consumer>
-  )
 
   renderSearchSection = () => (
     <BookHubThemeContext.Consumer>
@@ -279,10 +236,10 @@ class Bookshelves extends Component {
         const textColor = !isDarkTheme ? 'light-theme-text' : 'dark-theme-text'
         const {bookshelfName} = this.state
         const bookShelf = bookshelvesList.filter(
-          eachShelf => eachShelf.labelValue === bookshelfName,
+          eachShelf => eachShelf.priceValue === bookshelfName,
         )
 
-        const shelfName = bookShelf[0].label
+        const shelfName = bookShelf[0].price
 
         return (
           <div className="books-display-container">
